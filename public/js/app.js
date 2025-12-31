@@ -103,6 +103,16 @@ function createPeerConnection(targetId) {
             sendPublicKey(targetId);
         }
     };
+    peerConnection.oniceconnectionstatechange = () => {
+        const state = peerConnection.iceConnectionState;
+        console.log("Trạng thái kết nối P2P:", state);
+        
+        if (state === 'connected' || state === 'completed') {
+             addMessage("System", "✅ Đã kết nối P2P thành công!");
+        } else if (state === 'failed' || state === 'disconnected') {
+             addMessage("System", "❌ Kết nối P2P thất bại (Do mạng chặn).");
+        }
+    };
 }
 
 async function sendPublicKey(targetId) {
