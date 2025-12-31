@@ -24,12 +24,12 @@
 
 ##  Key Features
 
-* ** End-to-End Encryption (E2EE):** Uses **Web Crypto API (RSA-OAEP 2048-bit)**. Keys are generated locally; the private key never leaves the browser.
-* ** Peer-to-Peer Architecture:** Messages are sent via **WebRTC Data Channels**, ensuring data never touches the database.
-* ** Reliable Connectivity (NAT Traversal):** Integrated custom **TURN Servers (via Metered.ca)** to bypass Symmetric NATs (works perfectly on 4G/5G and restrictive Public Wi-Fi).
-* ** Mobile-First Design:** Responsive UI/UX with touch optimization and `100dvh` support for mobile browsers.
-* ** Enhanced UX:** Support for `Enter` to send and `Shift+Enter` for new lines.
-* ** Zero-Knowledge Server:** The Node.js server acts only as a Signaling relay and stores **zero** message logs.
+* **End-to-End Encryption (E2EE):** Uses **Web Crypto API (RSA-OAEP 2048-bit)**. Keys are generated locally; the private key never leaves the browser.
+* **Peer-to-Peer Architecture:** Messages are sent via **WebRTC Data Channels**, ensuring data never touches the database.
+* **Reliable Connectivity (NAT Traversal):** Integrated custom **TURN Servers (via Metered.ca)** to bypass Symmetric NATs (works perfectly on 4G/5G and restrictive Public Wi-Fi).
+* **Mobile-First Design:** Responsive UI/UX with touch optimization and `100dvh` support for mobile browsers.
+* **Enhanced UX:** Support for `Enter` to send and `Shift+Enter` for new lines.
+* **Zero-Knowledge Server:** The Node.js server acts only as a Signaling relay and stores **zero** message logs.
 
 ---
 
