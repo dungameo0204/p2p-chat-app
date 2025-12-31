@@ -82,7 +82,10 @@ npm install
 
 # 4. Start the server
 node server.js
-Author
+```
+---
+
+## Author
 Hoàng Mạnh Dũng
 
 Portfolio/Github: github.com/dungameo0204
