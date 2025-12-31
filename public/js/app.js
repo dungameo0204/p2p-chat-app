@@ -27,18 +27,22 @@ joinBtn.addEventListener('click', async () => {
     await cryptoManager.generateKeys();
     
     socket.emit('join-room', roomId);
-    document.getElementById('room-display-name').innerText = "Phòng: " + roomId;
+    
+    // Cập nhật giao diện
+    const roomDisplayName = document.getElementById('room-display-name');
+    if (roomDisplayName) roomDisplayName.innerText = "Phòng: " + roomId;
+    
     document.getElementById('connection-panel').classList.add('hidden');
     chatPanel.classList.remove('hidden');
     addMessage("System", `Đã vào phòng: ${roomId}. Đợi người khác...`);
 });
 
+// Xử lý phím Enter để gửi
 msgInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault(); // Chặn việc xuống dòng mặc định của trình duyệt
-        sendBtn.click();    // Giả vờ bấm nút Gửi (Kích hoạt logic gửi tin)
+        e.preventDefault(); // Chặn xuống dòng
+        sendBtn.click();    // Kích hoạt nút gửi
     }
-    // Ngược lại: Nếu có giữ Shift + Enter thì trình duyệt tự cho xuống dòng (mặc định)
 });
 
 // === 2. Socket Events (Signaling) ===
@@ -89,6 +93,9 @@ socket.on('signal', async (data) => {
 // Nhận Khóa Công Khai của đối phương
 socket.on('exchange-key', async (data) => {
     await cryptoManager.importPeerPublicKey(data.publicKey);
+    // --- [ĐÃ KHÔI PHỤC] Thông báo mã hóa thành công ---
+    addMessage("System", "🔒 Đã nhận khóa công khai. Kênh chat đã được MÃ HÓA E2EE.");
+    console.log("Key exchanged successfully");
 });
 
 // === 3. WebRTC Logic ===
@@ -105,13 +112,20 @@ function createPeerConnection(targetId) {
     peerConnection.onconnectionstatechange = () => {
         if (peerConnection.connectionState === 'connected') {
             console.log("P2P Connected");
-            // Khi P2P thông, gửi Public Key của mình qua Socket (hoặc qua DataChannel cũng được)
+            // --- [ĐÃ KHÔI PHỤC] Thông báo kết nối thành công ---
+            addMessage("System", "✅ Đã kết nối P2P thành công!"); 
+            // Khi P2P thông, gửi Public Key của mình
             sendPublicKey(targetId);
         }
     };
+
+    // Theo dõi trạng thái mạng (để biết nếu 4G bị chặn)
     peerConnection.oniceconnectionstatechange = () => {
         const state = peerConnection.iceConnectionState;
         console.log("Trạng thái kết nối P2P:", state);
+        if (state === 'failed' || state === 'disconnected') {
+            addMessage("System", "❌ Kết nối thất bại. Kiểm tra lại mạng hoặc config TURN.");
+        }
     };
 }
 
@@ -138,7 +152,11 @@ function setupDataChannel(channel) {
 
 sendBtn.addEventListener('click', async () => {
     const text = msgInput.value;
-    if (!text || !dataChannel || dataChannel.readyState !== 'open') return;
+    // Kiểm tra kỹ xem kênh chat đã mở chưa
+    if (!text) return;
+    if (!dataChannel || dataChannel.readyState !== 'open') {
+        return alert("Đợi kết nối P2P ổn định đã bạn ơi!");
+    }
 
     try {
         // Mã hóa trước khi gửi
@@ -149,6 +167,7 @@ sendBtn.addEventListener('click', async () => {
         msgInput.value = '';
     } catch (err) {
         alert("Chưa có khóa của đối phương hoặc lỗi mã hóa!");
+        console.error(err);
     }
 });
 
@@ -163,4 +182,3 @@ function addMessage(sender, text) {
     messagesDiv.appendChild(div);
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
-
