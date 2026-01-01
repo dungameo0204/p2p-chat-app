@@ -206,7 +206,31 @@ h2 { margin-bottom: 5px; color: #111827; }
     bottom: 0;
     left: 0;
     width: 100%;
-    z-index: 100; 
+    z-index: 100;
+    align-items: center; /* <-- THÊM DÒNG NÀY */
+}
+
+/* Thêm style cho ảnh trong tin nhắn */
+.message img {
+    max-width: 100%; /* Ảnh không được to quá khung tin nhắn */
+    max-height: 300px; /* Giới hạn chiều cao */
+    border-radius: 12px;
+    margin-top: 5px;
+    display: block;
+    cursor: pointer; /* Để sau này có thể bấm vào xem ảnh to nếu muốn */
+}
+
+#file-btn {
+    font-size: 20px;
+    color: #6b7280;
+    padding: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    transition: color 0.2s;
+}
+#file-btn:hover {
+    color: var(--primary-color);
 }
 
 #msg-input {
